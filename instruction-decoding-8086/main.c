@@ -260,7 +260,6 @@ Pair	decode_mov_ir(uint8_t *buffer, const size_t size, int *i)
 	if (w)
 	{
 		hex_to_string(value_buffer, &j, buffer[*i + 2]);
-		printf("DBUEG: %s\n", value_buffer);
 	}
 	hex_to_string(value_buffer, &j, buffer[*i + 1]);
 
