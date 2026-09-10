@@ -111,6 +111,7 @@ Pair	decode_mov_rm_r(uint8_t *buffer, const size_t size, int *i)
 		{
 			dst_reg = (buffer[*i + 1] >> 3) & 0b0000111;
 			static char ea_calc[16];
+			memset(ea_calc, 0, SIZE(ea_calc));
 			int j = 0;
 			memset(ea_calc, 0, SIZE(ea_calc));
 			memset(ea_calc, '[', 1);
@@ -155,6 +156,7 @@ Pair	decode_mov_rm_r(uint8_t *buffer, const size_t size, int *i)
 
 			dst_reg = (buffer[*i + 1] >> 3) & 0b0000111;
 			static char ea_calc[32];
+			memset(ea_calc, 0, SIZE(ea_calc));
 			int j = 0;
 			memset(ea_calc, 0, SIZE(ea_calc));
 			memset(ea_calc, '[', 1);
@@ -176,12 +178,9 @@ Pair	decode_mov_rm_r(uint8_t *buffer, const size_t size, int *i)
 				j += strlen(ea_registers[rm][1]);
 			}
 
-			if (buffer[*i + 2])
-			{
-				memcpy(ea_calc + j, "+0x", 3);
-				j += 3;
-				hex_to_string(ea_calc, &j, buffer[*i + 2]);
-			}
+			memcpy(ea_calc + j, "+0x", 3);
+			j += 3;
+			hex_to_string(ea_calc, &j, buffer[*i + 2]);
 
 			memset(ea_calc + j, ']', 1);
 			++j;
@@ -196,6 +195,7 @@ Pair	decode_mov_rm_r(uint8_t *buffer, const size_t size, int *i)
 
 			dst_reg = (buffer[*i + 1] >> 3) & 0b0000111;
 			static char ea_calc[32];
+			memset(ea_calc, 0, SIZE(ea_calc));
 			int j = 0;
 			memset(ea_calc, 0, SIZE(ea_calc));
 			memset(ea_calc, '[', 1);
@@ -254,11 +254,13 @@ Pair	decode_mov_ir(uint8_t *buffer, const size_t size, int *i)
 	uint8_t dst_reg = buffer[*i] & 0b00000111;
 
 	static char value_buffer[16];
+	memset(value_buffer, 0, SIZE(value_buffer));
 	memcpy(value_buffer, "0x", 2);
 	int j = 2;
 	if (w)
 	{
 		hex_to_string(value_buffer, &j, buffer[*i + 2]);
+		printf("DBUEG: %s\n", value_buffer);
 	}
 	hex_to_string(value_buffer, &j, buffer[*i + 1]);
 
