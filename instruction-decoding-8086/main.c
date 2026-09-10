@@ -249,8 +249,8 @@ Pair	decode_mov_rm_r(uint8_t *buffer, const size_t size, int *i)
 // Immediate to register: 1011 w reg
 Pair	decode_mov_ir(uint8_t *buffer, const size_t size, int *i)
 {
-	assert(*i + 2 < size);
-	uint8_t w = buffer[*i] & 0b00000001;
+	uint8_t w = (buffer[*i] & 0b00001000) >> 3;
+	assert(*i + 1 + w < size);
 	uint8_t dst_reg = buffer[*i] & 0b00000111;
 
 	static char value_buffer[16];
@@ -262,7 +262,7 @@ Pair	decode_mov_ir(uint8_t *buffer, const size_t size, int *i)
 	}
 	hex_to_string(value_buffer, &j, buffer[*i + 1]);
 
-	*i += 2;
+	*i += 1 + w;
 	return (Pair){.left = registers[dst_reg][w], .right = value_buffer};
 }
 
